@@ -9,6 +9,8 @@ wss.on('connection',function connect(ws){
         const message = JSON.parse(data);
         if(message.type === "hi"){
             ws.send("hello")
+        }else if(message.type === 'binaryStream'){
+            console.log("Binary Stream Comming....")
         }
 
     })

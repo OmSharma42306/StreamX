@@ -7,13 +7,13 @@ export default function Stream () {
     const [stream,setStream] = useState<MediaStream | any>(null);
     const [mediaRecorder,setMediaRecorder] = useState<MediaRecorder | null>(null);
     const [recordedChunks,setRecordedChunks] = useState<Blob[]>([]);
-    // useEffect(()=>{
-    //     const socket = new WebSocket('ws://localhost:8080')
-    //     socket.onopen = () =>{
-    //         console.log("connected!")
-    //     }
-    //     setSocket(socket);
-    // },[])
+    useEffect(()=>{
+        const socket = new WebSocket('ws://localhost:8080')
+        socket.onopen = () =>{
+            console.log("connected!")
+        }
+        setSocket(socket);
+    },[])
     
 
     async function startRecording(){
@@ -37,21 +37,20 @@ export default function Stream () {
     }
     function startStreaming(){
         // initialize mediarecorder for stream.
+        if(!socket) return;
         console.log("i am in")
         const recorder = new MediaRecorder(stream,{"mimeType":"video/webm"});
         // const chunks : Blob[] = [];
         recorder.ondataavailable = (event) =>{
             console.log("binary stream avilable",event.data)
-            
+            socket?.send(JSON.stringify({type:'binaryStream',binaryData:event.data}));
         }
 
         recorder.start(25);
         setMediaRecorder(recorder)
 
     }
-    
-    
-    
+
     return <div>
         hi. i am from streamyard.
         <button onClick={startRecording}>Start Recording.</button>
