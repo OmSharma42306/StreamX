@@ -43,7 +43,7 @@ export default function Stream () {
         // const chunks : Blob[] = [];
         recorder.ondataavailable = (event) =>{
             console.log("binary stream avilable",event.data)
-            socket?.send(JSON.stringify({type:'binaryStream',binaryData:event.data}));
+            socket?.send(event.data); // send a raw binary data
         }
 
         recorder.start(25);
